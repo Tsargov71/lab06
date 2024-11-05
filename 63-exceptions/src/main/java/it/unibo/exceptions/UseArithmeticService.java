@@ -47,6 +47,12 @@ public final class UseArithmeticService {
          * This method should re-try to send message to the provided server, catching all IOExceptions,
          * until it succeeds.
          */
+        try{
+            server.sendData(message);
+        }catch(Exception e){
+            System.out.println("The massage has failed to be sent to the server, retrying");
+            retrySendOnNetworkError(server, message);
+        }
     }
 
     private static String retryReceiveOnNetworkError(final NetworkComponent server) {
@@ -54,7 +60,12 @@ public final class UseArithmeticService {
          * This method should re-try to retrieve information from the provided server, catching all IOExceptions,
          * until it succeeds.
          */
-        return null;
+        try{
+            return server.receiveResponse();
+        }catch(Exception e){
+            System.out.println("Error in retrieving the information from the provided server, retrying");
+            return retryReceiveOnNetworkError(server);
+        }
     }
 
     private static void assertEqualsAsDouble(final String expected, final String actual) {
